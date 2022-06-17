@@ -2,14 +2,12 @@ package quecocino
 
 class Administrador extends Usuario {
 
-    Boolean puedeDarAdmin
-
     static constraints = {
-        puedeDarAdmin nullable: false
+
     }
 
-    void banearUsuario(Usuario user){
-        user.serBaneado()
+    void banearUsuario(Usuario user, int tiempoEnDias){
+        user.serBaneado(tiempoEnDias)
     }
 
     @Override

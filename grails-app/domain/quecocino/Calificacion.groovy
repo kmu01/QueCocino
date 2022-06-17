@@ -12,13 +12,8 @@ class Calificacion {
         puntaje inList: [-1,1], nullable: false
     }
 
-    Calificacion(int val, com = null){
-        comentario = com
-        puntaje = val
-    }
-
-    borrarCalificacion(){
-        user.borrarCalificacion(this)
+    void borrarCalificacion(){
+        if (user.getCalificaciones().contains(this)) user.borrarCalificacion(this)
         receta.borrarCalificacion(this)
     }
 

@@ -5,9 +5,9 @@ class Receta {
     String titulo
     String descripcion
     int id
-    def ingredientes = []
     def etiquetas = []
-    private def calificaciones = []
+
+    static hasMany = [calificaciones: Calificacion]
 
     static belongsTo = [perfil: Perfil]
 
@@ -19,17 +19,15 @@ class Receta {
     }
 
     void agregarCalificacion(Calificacion c){
-        calificaciones.add(c)
+        this.addToCalificaciones(c)
     }
 
     void borrarCalificacion(Calificacion c){
         calificaciones.remove(c)
     }
 
-    borrarReceta(){
-        for (i in calificaciones){
-            i.borrarCalificacion()
-        }
-        perfil.borrarReceta(this)
+    void borrarReceta(){
+        for (i in calificaciones) i.borrarCalificacion()
+        if (perfil.getRecetas().contains(this)) perfil.borrarReceta(this)
     }
 }

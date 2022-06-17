@@ -7,9 +7,10 @@ class Usuario {
     String nombre
     String email
     String contrasenia
-    private def calificaciones = []
     private LocalDate baneadoHasta
-    private Perfil perfil
+    Perfil perfil
+
+    static hasMany = [calificaciones: Calificacion]
 
     static constraints = {
         nombre size: 5..15, blank: false, unique: true
@@ -25,16 +26,16 @@ class Usuario {
         this.baneadoHasta = LocalDate.now().plusDays(cantidadDeDias)
     }
 
-    void crearReceta(Receta r){
+    void agregarReceta(Receta r){
         if (estaBaneado()) throw new Exception("Usuario baneado");
         perfil.agregarReceta(r)
     }
 
     void calificar(Calificacion c, Receta r){
         if (estaBaneado()) throw new Exception("Usuario baneado");
-        if (calificaciones.find(c.getReceta() == r)) throw new Exception("Usuario baneado");
+        if (calificaciones.find{it.getRecetaId() == r.getId()}) throw new Exception("No se puede votar la misma receta 2 veces");
         r.agregarCalificacion(c)
-        calificaciones.add(c)
+        this.addToCalificaciones(c)
     }
 
     void actualizarPerfil(String url_imagen, String desc){
@@ -47,7 +48,6 @@ class Usuario {
 
     void borrarPerfil(){
         this.perfil.borrarPerfil()
-        this.perfil = new Perfil()
     }
 
     void borrarCalificacion(Calificacion c){
@@ -55,5 +55,6 @@ class Usuario {
             this.calificaciones.remove(c)
             c.borrarCalificacion()
         }
+        else throw new Exception("Esta calificacion no fue dada por este usuario")
     }
 }
